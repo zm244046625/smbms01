@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 配置事务通知 -->
+    <!-- 可以定义事务的传播性和事务的隔离级别 -->
+    <tx:advice id="txAdvice">
+        <tx:attributes>
+            <!--
+               REQUIRED
+               当前方法如果有事务就执行当前事务
+               如果没有事务就创建一个事务并且运行这个事务
+               默认传播级别为REQUIRED 可以不写
+             -->
+            <tx:method name="find*" propagation="SUPPORTS"/>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+</beans>

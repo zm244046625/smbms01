@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smbms.dao.BillDao">
+
+    <sql id="insertColumn">
+        billCode,productName,productDesc,productUnit,productCount,totalPrice,
+        isPayment,creationDate,createdBy,modifyBy,modifyDate,providerid
+    </sql>
+
+    <sql id="insertValue">
+        #{billCode},#{productName},#{productDesc},#{productUnit},#{productCount},#{totalPrice},
+        #{isPayment},#{creationDate},#{createdBy},#{modifyBy},#{modifyDate},#{providerid}
+    </sql>
+
+    <resultMap id="billResult" type="Bill">
+        <result property="billCode" column="billCode"/>
+        <result property="productName" column="productName"/>
+        <result property="productCount" column="productCount"/>
+        <result property="isPayment" column="isPayment"/>
+        <result property="creationDate" column="creationDate"/>
+        <result property="productName" column="productName"/>
+    </resultMap>
+
+    <delete id="deleteBills">
+        delete from smbms_bill where id=#{id}
+    </delete>
+    <update id="updateBills" parameterType="Bill">
+        update smbms_bill set productDesc = #{productDesc}
+        where id = #{id}
+    </update>
+    <insert id="addBills">
+        insert into smbms_bill(<include refid="insertColumn"/>)
+        values(<include refid="insertValue"/>)
+    </insert>
+    <select id="findAllBills" parameterType="com.smbms.pojo.Bill" resultMap="billResult">
+            select b.billCode,b.productName,b.productCount,b.isPayment,b.creationDate,p.proName
+            from smbms_bill b inner join smbms_provider p
+            on b.providerId = p.id
+            <where>
+                <if test="productName!=null">
+                    and b.productName like concat('%',#{productName},'%')
+                </if>
+                <if test="isPayment!=null">
+                    and b.isPayment = #{isPayment};
+                </if>
+            </where>
+    </select>
+    <select id="findBillByName" resultType="com.smbms.pojo.Bill">
+        select * from smbms_bill where productName like concat('%',#{proName},'%')
+        and providerid = #{providerid}
+    </select>
+
+</mapper>
